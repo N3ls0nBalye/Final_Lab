@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style type="text/css">
+
+    @media (max-width: 768px) { 
+        .right-column{
+            margin-left: 0px;
+            flex-direction: column; /* Stack the image and text in mobile view */
+        }
+    }
+
+    @media (min-width: 768px) { 
+        .right-column{
+            margin-left: 20px;
+            display: flex;
+            align-items: center; /* Align content vertically */
+            justify-content: flex-start; /* Align content to the left */
+        }
+    }
+
+    .blog-post-container{
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    .create-post-bar{
+        background-color: #fff;
+        margin-bottom:20px;
+    }
+
+    .left-column{
+        padding:0px;
+    }
+
+    .right-column{
+        padding:0px;
+    }
+
+    .lead{
+        font-size: 17px;
+    }
+
+    .about-image {
+        width: 100%;
+        max-width: 400px;
+        margin-top: 20px;
+        margin-right: 20px; /* Add some space between image and text */
+        border-radius: 8px;
+    }
+
+    /* Make sure the text content aligns well beside the image */
+    .about-content {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .about-text {
+        max-width: 600px; /* Adjust the max width of the text */
+        margin-top: 20px;
+    }
+
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="about-content">
+                <!-- Image Section -->
+                <div class="image-section">
+                    <img src="{% static 'pictureofme.jpg' %}" alt="About Us Image" class="about-image">
+                </div>
+
+                <!-- Text Content Section -->
+                <div class="about-text">
+                    <h1>About</h1>
+                    <p class="lead">{{ message }}</p>
+                    At Gear-Up, we are passionate about cycling and promoting an active, healthy lifestyle. Whether 
+					you’re a seasoned rider or just starting out, our community is here to support you.</p>
+                    <p>We organize group rides, provide resources for cyclists, and create a space for people
+						 to connect. Our goal is to build a friendly, welcoming cycling community that thrives 
+						 on shared experiences and a love for the road.</p>
+                    <p>Join us today and become a part of the Gear-Up Cycling Community! Explore the great 
+						outdoors, improve your cycling skills, and make new friends along the way.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

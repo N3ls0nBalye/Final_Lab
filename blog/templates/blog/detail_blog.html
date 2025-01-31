@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style type="text/css">
+    /* Card and layout styling */
+    .card {
+        max-width: 700px;
+        margin: 20px auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: scale(1.02);
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    /* Styling for image */
+    .card-img-top {
+        max-height: 300px;
+        object-fit: cover;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        transition: opacity 0.3s ease;
+    }
+
+    .card-img-top:hover {
+        opacity: 0.8;
+    }
+
+    /* Form and button styling */
+    .card-body {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    .card-body:hover {
+        background-color: #e9ecef;
+    }
+
+    .card-title {
+        font-size: 28px;
+        color: #333;
+        transition: color 0.3s ease;
+    }
+
+    .card-title:hover {
+        color: #007bff;
+    }
+
+    .card-text {
+        font-size: 16px;
+        color: #555;
+    }
+
+    /* Button Styling */
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+    }
+
+    button:active {
+        transform: translateY(2px);
+    }
+
+    /* Comment form */
+    .comment-form {
+        margin-top: 20px;
+    }
+
+    .comment-form input, .comment-form textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: border-color 0.3s ease;
+    }
+
+    .comment-form input:focus, .comment-form textarea:focus {
+        border-color: #007bff;
+    }
+
+    .comment-form button {
+        width: 100%;
+        background-color: #28a745;
+    }
+
+    /* Like button animation */
+    .like-btn {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .like-btn:hover {
+        background-color: #218838;
+        transform: scale(1.05);
+    }
+
+    .like-btn:active {
+        transform: scale(1);
+    }
+
+    /* Footer and overall design */
+    .card-footer {
+        text-align: center;
+        background-color: #f1f1f1;
+        padding: 10px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    h3 {
+        font-size: 22px;
+        margin-top: 20px;
+        color: #333;
+    }
+
+    /* Adding smooth scroll for comments */
+    .comments-container {
+        max-height: 300px;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="card m-auto">
+            <img class="card-img-top" src="{{ blog_post.image.url }}" alt="Blog Image">
+            <div class="card-body mt-2 mb-2">
+              <h2 class="card-title">{{ blog_post.title }}</h2>
+              <p class="card-text">{{ blog_post.body|safe }}</p>
+              
+              <!-- Display Category Name -->
+              <p class="card-text"><strong>Category:</strong> {{ blog_post.category.name }}</p>
+              
+              
+              <form method="post" action="{% url 'blog:add_comment' blog_post.slug %}" class="comment-form">
+                  {% csrf_token %}
+                  {{ form.as_p }}
+                  <button type="submit">Add Comment</button>
+              </form>
+              
+              <p>Likes: {{ blog_post.likes.count }}</p>
+              <form method="post" action="{% url 'blog:like_post' blog_post.slug %}">
+                  {% csrf_token %}
+                  <button type="submit" class="like-btn">
+                      {% if request.user in blog_post.likes.all %}
+                          Unlike
+                      {% else %}
+                          Like
+                      {% endif %}
+                  </button>
+              <h3>Comments:</h3>
+                    <div class="comments-container">
+                      {% for comment in blog_post.comments.all %}
+                          <p><strong>{{ comment.author }}</strong>: {{ comment.content }} ({{ comment.created_at }})</p>
+                      {% empty %}
+                          <p>No comments yet.</p>
+                      {% endfor %}
+              </div>
+              
+              </form>
+              
+              {% if blog_post.author == request.user %}
+                <a href="{% url 'blog:edit' blog_post.slug %}" class="btn btn-primary">Update</a>
+                <a href="{% url 'blog:delete' blog_post.slug %}" class="btn btn-danger">Delete</a>
+              {% endif %}
+            </div>
+            <div class="card-footer text-muted">
+              Posted on {{ blog_post.date_published }} by {{ blog_post.author }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
